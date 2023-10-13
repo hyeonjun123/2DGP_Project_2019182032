@@ -1,16 +1,15 @@
 from pico2d import *
 import random
 
-TUK_WIDTH, TUK_HEIGHT = 1280, 757
+TUK_WIDTH, TUK_HEIGHT = 800, 805
 
 idle_1, idle_2 = True, True #정지모션
 
 dir_x, dir_x2 = 0, 0
 dir_y, dir_y2 = 0, 0
 
-x,x2 = TUK_WIDTH / 2, TUK_WIDTH / 2
-y,y2 = TUK_HEIGHT / 2, TUK_HEIGHT / 2
-
+x,x2 = 170, 680
+y,y2 = 197.5, 197.5
 
 
 def load_resources():
@@ -18,12 +17,12 @@ def load_resources():
     global character, character2
 
     arrow = load_image('hand_arrow.png')
-    volleyball_ground = load_image('Evening_background2.png')
+    volleyball_ground = load_image('Evening_background3.png')
     volleyball_net = load_image('volleyball_net_1.png')
 
 
     character = load_image('animation_sheet4.png') #사람
-    character2 = load_image('animation_sheet4.png') #마법사
+    character2 = load_image('animation_sheet4.png') #마법사#
 
 
 def handle_events():
@@ -41,6 +40,7 @@ def handle_events():
             # character1의 이동
             if event.key == SDLK_d:
                 dir_x += 1
+
                 idle_1 = False
             elif event.key == SDLK_a:
                 dir_x -= 1
@@ -101,6 +101,20 @@ def handle_events():
             running = False
 
 
+
+def set_character_direction(dx):
+    # 캐릭터의 이동 방향을 설정하는 함수
+    global character_scale_x
+
+    if dx > 0:
+        character_scale_x = 1  # 오른쪽으로 이동하면 원래 방향대로
+    else:
+        character_scale_x = -1  # 왼쪽으로 이동하면 이미지를 뒤집음
+
+
+
+
+
 def reset_world():
     global running, cx, cy, frame
     global t, action
@@ -113,30 +127,28 @@ def reset_world():
     action = 3
 
 
-
-
-
 def render_world():
 
     clear_canvas()
     volleyball_ground.draw(TUK_WIDTH //2, TUK_HEIGHT//2)
-    volleyball_net.draw(TUK_WIDTH, TUK_HEIGHT)
+    volleyball_net.draw(412, 225)
 
     #king_icon.draw(512,512)
 
 #character1 render
     if idle_1 == True:
-        character.clip_draw(0, 260, 120, 130, x, y)
+        character.clip_draw(0, 0, 120, 130, x, y)
         print(x,y)
     elif idle_1==False:
-        character.clip_draw(frame * 120, 260, 120, 130, x, y)
+        character.clip_draw(frame * 120, 0, 120, 130, x, y)
+
 
 
 #character2 render
     if idle_2 == True:
         character2.clip_draw(0, 260, 120, 130, x2, y2)
     elif idle_2==False:
-        character2.clip_draw(frame * 120, 260, 120, 130, x2, y2)
+            character2.clip_draw(frame * 120, 260, 120, 130, x2, y2)
     update_canvas()
 
 
@@ -166,7 +178,8 @@ def update_world():
             y2 = 100 + 10 #밑
         elif(y2 > 970):
             y2 = 970 - 10 #위
-    delay(0.05)
+
+    delay(0.01)
 
 
 

@@ -1,7 +1,7 @@
 from pico2d import *
 import random
 
-TUK_WIDTH, TUK_HEIGHT = 1280, 1024
+TUK_WIDTH, TUK_HEIGHT = 1280, 757
 
 idle_1, idle_2 = True, True #정지모션
 
@@ -14,12 +14,14 @@ y,y2 = TUK_HEIGHT / 2, TUK_HEIGHT / 2
 
 
 def load_resources():
-    global volleyball_ground, arrow, king_icon
+    global volleyball_ground, volleyball_net, arrow, king_icon
     global character, character2
 
     arrow = load_image('hand_arrow.png')
-    volleyball_ground = load_image('bg1.png')
-    #king_icon = load_image('king_icon.png')
+    volleyball_ground = load_image('Evening_background2.png')
+    volleyball_net = load_image('volleyball_net_1.png')
+
+
     character = load_image('animation_sheet4.png') #사람
     character2 = load_image('animation_sheet4.png') #마법사
 
@@ -117,12 +119,15 @@ def reset_world():
 def render_world():
 
     clear_canvas()
-    volleyball_ground.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
+    volleyball_ground.draw(TUK_WIDTH //2, TUK_HEIGHT//2)
+    volleyball_net.draw(TUK_WIDTH, TUK_HEIGHT)
+
     #king_icon.draw(512,512)
 
 #character1 render
     if idle_1 == True:
         character.clip_draw(0, 260, 120, 130, x, y)
+        print(x,y)
     elif idle_1==False:
         character.clip_draw(frame * 120, 260, 120, 130, x, y)
 

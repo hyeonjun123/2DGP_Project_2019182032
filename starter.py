@@ -20,7 +20,7 @@ def load_resources():
 
     arrow = load_image('hand_arrow.png')
     volleyball_ground = load_image('Evening_background3.png')
-    volleyball_net = load_image('volleyball_net_1.png')
+    volleyball_net = load_image('volleyball_net_11.png')
 
     ball = load_image('ball.png')
     character = load_image('animation_sheet4.png') #사람
@@ -133,7 +133,7 @@ def render_world():
 
     clear_canvas()
     volleyball_ground.draw(TUK_WIDTH //2, TUK_HEIGHT//2)
-    volleyball_net.draw(412, 225)
+    volleyball_net.draw(412, 273)
     ball.draw(bx,by)
     #king_icon.draw(512,512)
 
@@ -165,7 +165,7 @@ def update_world():
 
     x += dir_x * 5
     y += dir_y * 5
-    by -= 1 #볼 떨어지도록
+    #by -= 1 #볼 떨어지도록
 
 
     #화면 밖으로 나가지 못하게

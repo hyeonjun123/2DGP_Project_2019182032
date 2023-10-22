@@ -8,6 +8,9 @@ idle_1, idle_2 = True, True #정지모션
 dir_x, dir_x2 = 0, 0
 dir_y, dir_y2 = 0, 0
 
+face_x = 1 #오른쪽
+face_x2 = 1 # 캐릭터2 오른족
+
 x,x2 = 170, 680
 y,y2 = 197.5, 197.5
 bx,by = 412, 400
@@ -30,6 +33,7 @@ def load_resources():
 def handle_events():
     global running #화면 실행
     global dir_x, dir_y, dir_x2, dir_y2 #캐릭터 x,y좌표
+    global face_x,face_x2
     global mx, my  #마우스 x,y좌표
     global idle_1, idle_2 #캐릭터2의 정지
 
@@ -42,10 +46,11 @@ def handle_events():
             # character1의 이동
             if event.key == SDLK_d:
                 dir_x += 1
-
+                face_x = 1 #오른쪽 보게
                 idle_1 = False
             elif event.key == SDLK_a:
                 dir_x -= 1
+                face_x = -1 #왼쪽 보게
                 idle_1 = False
             elif event.key == SDLK_w:
                 dir_y += 1
@@ -58,9 +63,11 @@ def handle_events():
             # character2의 이동
             if event.key == SDLK_RIGHT:
                 dir_x2 += 1
+                face_x2 = 1 #오른쪽 보게
                 idle_2 = False
             elif event.key ==SDLK_LEFT:
                 dir_x2 -= 1
+                face_x2 = -1 #왼쪽 보게
                 idle_2 = False
             elif event.key == SDLK_ESCAPE:
                 running = False
@@ -130,6 +137,7 @@ def reset_world():
 
 
 def render_world():
+    global face_x,face_x2
 
     clear_canvas()
     volleyball_ground.draw(TUK_WIDTH //2, TUK_HEIGHT//2)
@@ -139,18 +147,33 @@ def render_world():
 
 
 #character1 render
-    if idle_1 == True:
-        character.clip_draw(0, 0, 120, 130, x, y)
-        print(x,y)
-    elif idle_1==False:
-        character.clip_draw(frame * 120, 0, 120, 130, x, y)
 
-#character2 render
-    if idle_2 == True:
-        character2.clip_draw(0, 260, 120, 130, x2, y2)
-    elif idle_2==False:
+    if face_x == 1:
+        if idle_1 == True:
+            character.clip_draw(0, 0, 120, 130, x, y)
+            print(x, y)
+        elif idle_1 == False:
+            character.clip_draw(frame * 120, 0, 120, 130, x, y)
+    elif face_x == -1:
+        if idle_1 == True:
+            character.clip_draw(0, 0, 120, 130, x, y)
+            print(x, y)
+        elif idle_1 == False:
+            character.clip_composite_draw(frame * 120, 0, 120, 130, 0, 'h', x, y,120,130)
+
+    #character2 render
+
+
+    if face_x2 ==-1:
+        if idle_2 == True:
+            character2.clip_draw(0, 260, 120, 130, x2, y2)
+        elif idle_2 == False:
             character2.clip_draw(frame * 120, 260, 120, 130, x2, y2)
-
+    elif face_x2 == 1:
+        if idle_2 == True:
+            character2.clip_draw(0, 260, 120, 130, x2, y2)
+        elif idle_2 == False:
+            character2.clip_composite_draw(frame * 120, 260, 120, 130, 0, 'h', x2, y2,120,130)
 
     update_canvas()
 

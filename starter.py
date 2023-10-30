@@ -183,7 +183,7 @@ def render_world():
 def update_world():
     global frame
     global t, action
-    global x, y, x2, y2,bx,by#화면상에 그려질 위치
+    global x, y, x2, y2, bx, by#화면상에 그려질 위치
     frame = (frame + 1) % 8
 
     x += dir_x * 5

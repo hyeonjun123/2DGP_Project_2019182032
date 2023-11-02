@@ -1,5 +1,7 @@
 from pico2d import *
 import random
+import logo_mode as start_mode
+
 
 TUK_WIDTH, TUK_HEIGHT = 800, 805
 

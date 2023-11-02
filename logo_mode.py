@@ -1,11 +1,10 @@
 from pico2d import load_image, clear_canvas, update_canvas, get_events, get_time
 import game_framework
-#import title_mode
+import title_mode
 
 
 def init():
     global image
-    global running
     global logo_start_time
 
 
@@ -19,10 +18,8 @@ def finish():
     pass
 
 def update():
-    global running
     if get_time() - logo_start_time >= 2.0:
-        running = False
-        #game_framework.change_mode(title_mode)
+        game_framework.change_mode(title_mode)
     pass
 
 def draw():

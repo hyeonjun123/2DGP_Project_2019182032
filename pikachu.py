@@ -1,5 +1,5 @@
 # 이것은 각 상태들을 객체로 구현한 것임.
-
+from pico2d import *
 from pico2d import get_time, load_image, SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_LEFT, SDLK_RIGHT
 import game_world
 
@@ -51,12 +51,18 @@ class Idle:
     @staticmethod
     def do(pikachu):
         pikachu.frame = (pikachu.frame + 1) % 8
+        delay(0.01)
         if get_time() - pikachu.wait_time > 2:
             pikachu.state_machine.handle_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(pikachu):
-        pikachu.image.clip_draw(pikachu.frame * 100, pikachu.action * 100, 100, 100, pikachu.x, pikachu.y)
+        if pikachu.face_dir == 1:
+            pikachu.image.clip_draw(0,  65, 68, 65, pikachu.x, pikachu.y, 150, 150)
+
+        elif pikachu.face_dir == -1:
+            pikachu.image.clip_composite_draw(0,  65, 68, 65, 0, 'h',pikachu.x, pikachu.y, 150, 150)
+
 
 
 
@@ -85,6 +91,7 @@ class Run:
     @staticmethod
     def draw(pikachu):
         pikachu.image.clip_draw(pikachu.frame * 100, pikachu.action * 100, 100, 100, pikachu.x, pikachu.y)
+        #pikachu.image.clip_draw(pikachu.frame * 68, pikachu.action * 65, 68, 65, pikachu.x, pikachu.y)
 
 
 
@@ -104,13 +111,13 @@ class Sleep:
         pikachu.frame = (pikachu.frame + 1) % 8
 
     @staticmethod
-    def draw(boy):
-        if boy.face_dir == -1:
-            boy.image.clip_composite_draw(boy.frame * 100, 200, 100, 100,
-                                          -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
+    def draw(pikachu):
+        if pikachu.face_dir == -1:
+            pikachu.image.clip_composite_draw(pikachu.frame * 100, 200, 100, 100,
+                                              -3.141592 / 2, '', pikachu.x + 25, pikachu.y - 25, 100, 100)
         else:
-            boy.image.clip_composite_draw(boy.frame * 100, 300, 100, 100,
-                                          3.141592 / 2, '', boy.x - 25, boy.y - 25, 100, 100)
+            pikachu.image.clip_composite_draw(pikachu.frame * 100, 300, 100, 100,
+                                              3.141592 / 2, '', pikachu.x - 25, pikachu.y - 25, 100, 100)
 
 
 class StateMachine:

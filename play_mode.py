@@ -1,41 +1,44 @@
 from pico2d import *
+import game_framework
 
 import game_world
-from boy import Boy
+from background import background2
 
+from pikachu import Pikachu
 
-# Game object class here
-
+# boy = None
 
 def handle_events():
-    global running
-
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
-            running = False
+            game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            running = False
+            game_framework.quit()
         else:
-            boy.handle_event(event)
-
+            pikachu.handle_event(event)
 
 def init():
-    global running
-    global grass
-    global team
-    global boy
+    global background2
+    global pikachu
 
     running = True
 
-    game_world.add_object(grass, 0)
+    background2 = background2()
+    game_world.add_object(background2, 0)
 
-    boy = Boy()
-    game_world.add_object(boy, 1)
+    pikachu = Pikachu()
+    game_world.add_object(pikachu, 1)
+
+
+def finish():
+    game_world.clear()
+    pass
 
 
 def update():
     game_world.update()
+    # delay(0.1)
 
 
 def draw():
@@ -43,8 +46,8 @@ def draw():
     game_world.render()
     update_canvas()
 
-
-def finish():
+def pause():
     pass
 
-
+def resume():
+    pass

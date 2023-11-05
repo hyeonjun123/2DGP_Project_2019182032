@@ -3,8 +3,6 @@
 from pico2d import get_time, load_image, SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_LEFT, SDLK_RIGHT
 import game_world
 
-# state event check
-# ( state event type, event value )
 
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
@@ -34,76 +32,76 @@ def time_out(e):
 class Idle:
 
     @staticmethod
-    def enter(boy, e):
-        if boy.face_dir == -1:
-            boy.action = 2
-        elif boy.face_dir == 1:
-            boy.action = 3
-        boy.dir = 0
-        boy.frame = 0
-        boy.wait_time = get_time() # pico2d import 필요
+    def enter(pikachu, e):
+        if pikachu.face_dir == -1:
+            pikachu.action = 2
+        elif pikachu.face_dir == 1:
+            pikachu.action = 3
+        pikachu.dir = 0
+        pikachu.frame = 0
+        pikachu.wait_time = get_time() # pico2d import 필요
         pass
 
     @staticmethod
-    def exit(boy, e):
+    def exit(pikachu, e):
         if space_down(e):
-            boy.fire_ball()
+            pikachu.fire_ball()
         pass
 
     @staticmethod
-    def do(boy):
-        boy.frame = (boy.frame + 1) % 8
-        if get_time() - boy.wait_time > 2:
-            boy.state_machine.handle_event(('TIME_OUT', 0))
+    def do(pikachu):
+        pikachu.frame = (pikachu.frame + 1) % 8
+        if get_time() - pikachu.wait_time > 2:
+            pikachu.state_machine.handle_event(('TIME_OUT', 0))
 
     @staticmethod
-    def draw(boy):
-        boy.image.clip_draw(boy.frame * 100, boy.action * 100, 100, 100, boy.x, boy.y)
+    def draw(pikachu):
+        pikachu.image.clip_draw(pikachu.frame * 100, pikachu.action * 100, 100, 100, pikachu.x, pikachu.y)
 
 
 
 class Run:
 
     @staticmethod
-    def enter(boy, e):
+    def enter(pikachu, e):
         if right_down(e) or left_up(e): # 오른쪽으로 RUN
-            boy.dir, boy.action, boy.face_dir = 1, 1, 1
+            pikachu.dir, pikachu.action, pikachu.face_dir = 1, 1, 1
         elif left_down(e) or right_up(e): # 왼쪽으로 RUN
-            boy.dir, boy.action, boy.face_dir = -1, 0, -1
+            pikachu.dir, pikachu.action, pikachu.face_dir = -1, 0, -1
 
     @staticmethod
-    def exit(boy, e):
+    def exit(pikachu, e):
         if space_down(e):
-            boy.fire_ball()
+            pikachu.fire_ball()
 
         pass
 
     @staticmethod
-    def do(boy):
-        boy.frame = (boy.frame + 1) % 8
-        boy.x += boy.dir * 5
+    def do(pikachu):
+        pikachu.frame = (pikachu.frame + 1) % 8
+        pikachu.x += pikachu.dir * 5
         pass
 
     @staticmethod
-    def draw(boy):
-        boy.image.clip_draw(boy.frame * 100, boy.action * 100, 100, 100, boy.x, boy.y)
+    def draw(pikachu):
+        pikachu.image.clip_draw(pikachu.frame * 100, pikachu.action * 100, 100, 100, pikachu.x, pikachu.y)
 
 
 
 class Sleep:
 
     @staticmethod
-    def enter(boy, e):
-        boy.frame = 0
+    def enter(pikachu, e):
+        pikachu.frame = 0
         pass
 
     @staticmethod
-    def exit(boy, e):
+    def exit(pikachu, e):
         pass
 
     @staticmethod
-    def do(boy):
-        boy.frame = (boy.frame + 1) % 8
+    def do(pikachu):
+        pikachu.frame = (pikachu.frame + 1) % 8
 
     @staticmethod
     def draw(boy):
@@ -148,7 +146,7 @@ class StateMachine:
 
 
 
-class Boy:
+class Pikachu:
     def __init__(self):
         self.x, self.y = 400, 90
         self.frame = 0
@@ -159,21 +157,6 @@ class Boy:
         self.state_machine = StateMachine(self)
         self.state_machine.start()
         self.item = None
-
-    # def fire_ball(self):
-    #     if self.item == 'Ball':
-    #         ball = Ball(self.x, self.y, self.face_dir * 10)
-    #         game_world.add_object(ball)
-    #     elif self.item == 'BigBall':
-    #         ball = BigBall(self.x, self.y, self.face_dir * 10)
-    #         game_world.add_object(ball)
-    #     # if self.face_dir == -1:
-    #     #     print('FIRE BALL LEFT')
-    #     #
-    #     # elif self.face_dir == 1:
-    #     #     print('FIRE BALL RIGHT')
-    #
-    #     pass
 
     def update(self):
         self.state_machine.update()

@@ -24,7 +24,7 @@ def load_resources():
     global ball
 
     arrow = load_image('hand_arrow.png')
-    volleyball_ground = load_image('Evening_background3.png')
+    volleyball_ground = load_image('background.png')
     volleyball_net = load_image('volleyball_net_11.png')
 
     ball = load_image('ball.png')

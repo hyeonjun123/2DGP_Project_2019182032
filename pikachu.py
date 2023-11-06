@@ -84,13 +84,20 @@ class Run:
 
     @staticmethod
     def do(pikachu):
-        pikachu.frame = (pikachu.frame + 1) % 8
-        pikachu.x += pikachu.dir * 5
+        pikachu.frame = (pikachu.frame + 1) % 7
+        delay(0.05)
+        pikachu.x += pikachu.dir * 4
         pass
 
     @staticmethod
     def draw(pikachu):
-        pikachu.image.clip_draw(pikachu.frame * 100, pikachu.action * 100, 100, 100, pikachu.x, pikachu.y)
+        if pikachu.face_dir == 1:
+            pikachu.image.clip_draw(pikachu.frame *66 ,  65*3, 68, 65, pikachu.x, pikachu.y, 150, 150)
+
+        elif pikachu.face_dir == -1:
+            pikachu.image.clip_composite_draw(pikachu.frame *66,  65*3, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150, 150)
+
+        #pikachu.image.clip_draw(pikachu.frame * 100, pikachu.action * 100, 100, 100, pikachu.x, pikachu.y)
         #pikachu.image.clip_draw(pikachu.frame * 68, pikachu.action * 65, 68, 65, pikachu.x, pikachu.y)
 
 

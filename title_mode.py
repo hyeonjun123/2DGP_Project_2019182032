@@ -3,7 +3,6 @@ from sdl2 import SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE, SDLK_SPACE
 
 import game_framework
 import play_mode
-import play_mode2
 import logo_mode
 
 

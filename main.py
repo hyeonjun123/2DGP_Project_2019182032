@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import title_mode as start_mode
+import logo_mode as start_mode
 
 
 open_canvas(800,549) #background 픽셀크기

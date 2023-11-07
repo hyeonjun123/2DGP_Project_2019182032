@@ -1,9 +1,10 @@
 from pico2d import *
 import game_framework
 
+import cloud
 import game_world
 from background import background2
-
+import background
 from pikachu import Pikachu
 
 # boy = None
@@ -20,6 +21,7 @@ def handle_events():
 
 def init():
     global background2
+    global cloud
     global pikachu
 
     running = True
@@ -30,6 +32,9 @@ def init():
     pikachu = Pikachu()
     game_world.add_object(pikachu, 1)
 
+    #추가
+    cloud = cloud.Cloud()
+    game_world.add_object(cloud, 2)
 
 def finish():
     game_world.clear()

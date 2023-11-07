@@ -25,6 +25,12 @@ def space_down(e):
 def time_out(e):
     return e[0] == 'TIME_OUT'
 
+def up_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
+def up_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_UP
+
+
 # time_out = lambda e : e[0] == 'TIME_OUT'
 
 
@@ -50,7 +56,7 @@ class Idle:
 
     @staticmethod
     def do(pikachu):
-        pikachu.frame = (pikachu.frame + 1) % 8
+        pikachu.frame = (pikachu.frame + 1) % 7
         delay(0.01)
         if get_time() - pikachu.wait_time > 2:
             pikachu.state_machine.handle_event(('TIME_OUT', 0))
@@ -61,7 +67,7 @@ class Idle:
             pikachu.image.clip_draw(0,  65, 68, 65, pikachu.x, pikachu.y, 150, 150)
 
         elif pikachu.face_dir == -1:
-            pikachu.image.clip_composite_draw(0,  65, 68, 65, 0, 'h',pikachu.x, pikachu.y, 150, 150)
+            pikachu.image.clip_composite_draw(0,  65, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150, 150)
 
 
 
@@ -75,6 +81,8 @@ class Run:
         elif left_down(e) or right_up(e): # 왼쪽으로 RUN
             pikachu.dir, pikachu.action, pikachu.face_dir = -1, 0, -1
 
+
+
     @staticmethod
     def exit(pikachu, e):
         if space_down(e):
@@ -86,7 +94,7 @@ class Run:
     def do(pikachu):
         pikachu.frame = (pikachu.frame + 1) % 7
         delay(0.05)
-        pikachu.x += pikachu.dir * 4
+        pikachu.x += pikachu.dir * 6
         pass
 
     @staticmethod
@@ -99,6 +107,39 @@ class Run:
 
         #pikachu.image.clip_draw(pikachu.frame * 100, pikachu.action * 100, 100, 100, pikachu.x, pikachu.y)
         #pikachu.image.clip_draw(pikachu.frame * 68, pikachu.action * 65, 68, 65, pikachu.x, pikachu.y)
+
+
+# class Jump:
+#     @staticmethod
+#     def enter(pikachu, e):
+#         if up_down(e):
+#             pikachu.dir_y = 1 #점프
+#             pikachu.wait_time = get_time()  # pico2d import 필요
+#
+#     @staticmethod
+#     def exit(pikachu, e):
+#         if space_down(e):
+#             pikachu.fire_ball()
+#         pass
+#
+#     @staticmethod
+#     def do(pikachu):
+#         pikachu.frame = (pikachu.frame + 1) % 7
+#         delay(0.05)
+#         pikachu.y += pikachu.dir_y * 6
+#         if get_time() - pikachu.wait_time > 1:
+#             pikachu.state_machine.handle_event(('TIME_OUT', 0))
+#         pass
+#
+#     @staticmethod
+#     def draw(pikachu):
+#         if pikachu.face_dir == 1:
+#             pikachu.image.clip_draw(pikachu.frame *66 ,  65*3, 68, 65, pikachu.x, pikachu.y, 150, 150)
+#
+#         elif pikachu.face_dir == -1:
+#             pikachu.image.clip_composite_draw(pikachu.frame *66,  65*3, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150, 150)
+
+
 
 
 
@@ -134,7 +175,8 @@ class StateMachine:
         self.transitions = {
             Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep, space_down: Idle},
             Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run},
-            Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run}
+            Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run,} #up_down : Jump
+            #Jump: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run, up_down : Jump, time_out:Idle}
         }
 
     def start(self):
@@ -167,6 +209,7 @@ class Pikachu:
         self.action = 3
         self.face_dir = 1
         self.dir = 0
+        self.dir_y = 1
         self.image = load_image('animation_sheet.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start()

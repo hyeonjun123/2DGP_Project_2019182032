@@ -1,37 +1,35 @@
 # 이것은 각 상태들을 객체로 구현한 것임.
 from pico2d import *
 from pico2d import get_time, load_image, SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_LEFT, SDLK_RIGHT
+
+import game_framework
 import game_world
+
+PIXEL_PER_METER = (10.0 / 0.3) # 10 pixel 30 cm
+RUN_SPEED_KMPH = 20.0 # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+
 
 
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
-
-
 def right_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
-
-
 def left_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
-
-
 def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
-
 def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
-
 def time_out(e):
     return e[0] == 'TIME_OUT'
-
 def up_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
 def up_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_UP
-
-
-# time_out = lambda e : e[0] == 'TIME_OUT'
 
 
 
@@ -56,10 +54,9 @@ class Idle:
 
     @staticmethod
     def do(pikachu):
-        pikachu.frame = (pikachu.frame + 1) % 7
-        delay(0.01)
         if get_time() - pikachu.wait_time > 2:
-            pikachu.state_machine.handle_event(('TIME_OUT', 0))
+            #pikachu.state_machine.handle_event(('TIME_OUT', 0))
+            pass
 
     @staticmethod
     def draw(pikachu):
@@ -80,21 +77,16 @@ class Run:
             pikachu.dir, pikachu.action, pikachu.face_dir = 1, 1, 1
         elif left_down(e) or right_up(e): # 왼쪽으로 RUN
             pikachu.dir, pikachu.action, pikachu.face_dir = -1, 0, -1
-
-
-
     @staticmethod
     def exit(pikachu, e):
         if space_down(e):
             pikachu.fire_ball()
-
         pass
-
     @staticmethod
     def do(pikachu):
-        pikachu.frame = (pikachu.frame + 1) % 7
-        delay(0.05)
-        pikachu.x += pikachu.dir * 6
+
+        pikachu.frame = (pikachu.frame + 1) % 5
+        pikachu.x += pikachu.dir *RUN_SPEED_PPS * game_framework.frame_time
         pass
 
     @staticmethod
@@ -204,7 +196,7 @@ class StateMachine:
 
 class Pikachu:
     def __init__(self):
-        self.x, self.y = 400, 90
+        self.x, self.y = 400, 125
         self.frame = 0
         self.action = 3
         self.face_dir = 1
@@ -214,6 +206,7 @@ class Pikachu:
         self.state_machine = StateMachine(self)
         self.state_machine.start()
         self.item = None
+
 
     def update(self):
         self.state_machine.update()

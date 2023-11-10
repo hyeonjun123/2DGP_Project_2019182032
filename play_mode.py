@@ -36,8 +36,10 @@ def init():
 
 
     #cloud추가
-    cloud = cloud.Cloud()
-    game_world.add_object(cloud, 1)
+    for i in range(10):
+        cloud_instance = cloud.Cloud()
+        game_world.add_object(cloud_instance, 1)
+
 
     #ball추가
     ball = ball.Ball()

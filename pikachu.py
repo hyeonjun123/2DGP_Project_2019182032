@@ -202,7 +202,7 @@ class StateMachine:
 
 class Pikachu:
     def __init__(self):
-        self.x, self.y = 400, 125
+        self.x, self.y = 400, 130
         self.frame = 0
         self.action = 3
         self.face_dir = 1

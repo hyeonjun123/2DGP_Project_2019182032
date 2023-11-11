@@ -11,37 +11,26 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
+ground_y = 130
+jump_y = 250
 
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
-
-
 def right_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
-
-
 def left_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
-
-
 def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
-
-
 def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
-
-
 def time_out(e):
     return e[0] == 'TIME_OUT'
-
-
 def up_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
-
-
 def up_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_UP
+
 
 
 class Idle:
@@ -113,35 +102,40 @@ class Run:
         # pikachu.image.clip_draw(pikachu.frame * 68, pikachu.action * 65, 68, 65, pikachu.x, pikachu.y)
 
 
-# class Jump:
-#     @staticmethod
-#     def enter(pikachu, e):
-#         if up_down(e):
-#             pikachu.dir_y = 1 #점프
-#             pikachu.wait_time = get_time()  # pico2d import 필요
-#
-#     @staticmethod
-#     def exit(pikachu, e):
-#         if space_down(e):
-#             pikachu.fire_ball()
-#         pass
-#
-#     @staticmethod
-#     def do(pikachu):
-#         pikachu.frame = (pikachu.frame + 1) % 7
-#         delay(0.05)
-#         pikachu.y += pikachu.dir_y * 6
-#         if get_time() - pikachu.wait_time > 1:
-#             pikachu.state_machine.handle_event(('TIME_OUT', 0))
-#         pass
-#
-#     @staticmethod
-#     def draw(pikachu):
-#         if pikachu.face_dir == 1:
-#             pikachu.image.clip_draw(pikachu.frame *66 ,  65*3, 68, 65, pikachu.x, pikachu.y, 150, 150)
-#
-#         elif pikachu.face_dir == -1:
-#             pikachu.image.clip_composite_draw(pikachu.frame *66,  65*3, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150, 150)
+class Jump:
+    @staticmethod
+    def enter(pikachu, e):
+        if up_down(e):
+            if pikachu.y < jump_y:  # jump높이까지 y높이를 높인다.
+                pikachu.dir_y = 1
+
+    @staticmethod
+    def exit(pikachu, e):
+        if space_down(e):
+            pikachu.fire_ball()
+        pass
+
+    @staticmethod
+    def do(pikachu):
+        pikachu.frame = (pikachu.frame + 1) % 5
+
+        if pikachu.y >= jump_y:
+            pikachu.dir_y = -1 #pikachu.dir_y를 -1로 해준다.
+
+
+        pikachu.y += pikachu.dir_y * RUN_SPEED_PPS * game_framework.frame_time
+
+        if pikachu.y <= ground_y:
+            pikachu.state_machine.handle_event(('TIME_OUT', 0))
+        pass
+
+    @staticmethod
+    def draw(pikachu):
+        if pikachu.face_dir == 1:
+            pikachu.image.clip_draw(pikachu.frame *66 ,  65*3, 68, 65, pikachu.x, pikachu.y, 150, 150)
+
+        elif pikachu.face_dir == -1:
+            pikachu.image.clip_composite_draw(pikachu.frame *66,  65*3, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150, 150)
 
 
 class Sleep:
@@ -174,10 +168,10 @@ class StateMachine:
         self.boy = boy
         self.cur_state = Idle
         self.transitions = {
-            Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep, space_down: Idle},
-            Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run},
-            Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, }  # up_down : Jump
-            # Jump: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run, up_down : Jump, time_out:Idle}
+            Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep, space_down: Idle, up_down : Jump},
+            Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run, up_down : Jump},
+            Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, up_down:Jump},
+            Jump: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run, up_down : Jump, time_out:Idle}
         }
 
     def start(self):
@@ -221,3 +215,8 @@ class Pikachu:
 
     def draw(self):
         self.state_machine.draw()
+        draw_rectangle(*self.get_bb())
+    def get_bb(self):
+        return self.x -60, self.y -60, self.x+60, self.y+60
+
+

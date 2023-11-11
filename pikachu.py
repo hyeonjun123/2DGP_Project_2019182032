@@ -11,6 +11,12 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
+
+
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 5
+
 ground_y = 130
 jump_y = 250
 
@@ -84,18 +90,17 @@ class Run:
 
     @staticmethod
     def do(pikachu):
-
-        pikachu.frame = (pikachu.frame + 1) % 5
+        pikachu.frame = (pikachu.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
         pikachu.x += pikachu.dir * RUN_SPEED_PPS * game_framework.frame_time
         pass
 
     @staticmethod
     def draw(pikachu):
         if pikachu.face_dir == 1:
-            pikachu.image.clip_draw(pikachu.frame * 66, 65 * 3, 68, 65, pikachu.x, pikachu.y, 150, 150)
+            pikachu.image.clip_draw(int(pikachu.frame) * 66, 65 * 3, 68, 65, pikachu.x, pikachu.y, 150, 150)
 
         elif pikachu.face_dir == -1:
-            pikachu.image.clip_composite_draw(pikachu.frame * 66, 65 * 3, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150,
+            pikachu.image.clip_composite_draw(int(pikachu.frame) * 66, 65 * 3, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150,
                                               150)
 
         # pikachu.image.clip_draw(pikachu.frame * 100, pikachu.action * 100, 100, 100, pikachu.x, pikachu.y)
@@ -132,10 +137,10 @@ class Jump:
     @staticmethod
     def draw(pikachu):
         if pikachu.face_dir == 1:
-            pikachu.image.clip_draw(pikachu.frame *66 ,  65*3, 68, 65, pikachu.x, pikachu.y, 150, 150)
+            pikachu.image.clip_draw(int(pikachu.frame) *66 ,  65*3, 68, 65, pikachu.x, pikachu.y, 150, 150)
 
         elif pikachu.face_dir == -1:
-            pikachu.image.clip_composite_draw(pikachu.frame *66,  65*3, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150, 150)
+            pikachu.image.clip_composite_draw(int(pikachu.frame) *66,  65*3, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150, 150)
 
 
 class Sleep:
@@ -171,7 +176,7 @@ class StateMachine:
             Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep, space_down: Idle, up_down : Jump},
             Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run, up_down : Jump},
             Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, up_down:Jump},
-            Jump: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run, up_down : Jump, time_out:Idle}
+            Jump: {time_out:Idle}
         }
 
     def start(self):
@@ -214,6 +219,7 @@ class Pikachu:
         self.state_machine.handle_event(('INPUT', event))
 
     def draw(self):
+
         self.state_machine.draw()
         draw_rectangle(*self.get_bb())
     def get_bb(self):

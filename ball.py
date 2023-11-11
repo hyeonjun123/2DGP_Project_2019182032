@@ -5,6 +5,16 @@ import game_framework
 
 background_x, background_y = 800,549
 
+PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 10.0  # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 5
+
 
 class Ball:
     image = None
@@ -17,16 +27,16 @@ class Ball:
         self.frame = 0
 
     def draw(self):
-        self.image.clip_draw(self.frame*71,0, 70, 70, self.x, self.y,100,100) #ball_size 71 70
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
+        self.y -= RUN_SPEED_PPS * game_framework.frame_time
+
         draw_rectangle(*self.get_bb())
+        self.image.clip_draw(int(self.frame)*71,0, 70, 70, self.x, self.y,100,100) #ball_size 71 70
 
 
     def update(self):
-        self.x += self.velocity * 100 * game_framework.frame_time
-        self.frame = (self.frame + 1) % 5
-        delay(0.05)
-
-
+        pass
+        #self.x += self.velocity * 100 * game_framework.frame_time
 
     def get_bb(self):
         return self.x -40, self.y -40, self.x+40, self.y+40

@@ -53,7 +53,9 @@ def finish():
 
 def update():
     game_world.update()
-
+    if game_world.collide(pikachu,ball):
+        ball.dir_x = -1
+        ball.dir_y = 1
 
 
 def draw():

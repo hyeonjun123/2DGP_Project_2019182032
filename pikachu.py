@@ -201,7 +201,7 @@ class StateMachine:
 
 class Pikachu:
     def __init__(self):
-        self.x, self.y = 400, 130
+        self.x, self.y = 700, 130
         self.frame = 0
         self.action = 3
         self.face_dir = 1
@@ -222,7 +222,12 @@ class Pikachu:
 
         self.state_machine.draw()
         draw_rectangle(*self.get_bb())
+
     def get_bb(self):
         return self.x -60, self.y -60, self.x+60, self.y+60
+
+    # def handle_collision(self,group, other):
+    #     if group == 'pikachu:ball':
+    #         pass
 
 

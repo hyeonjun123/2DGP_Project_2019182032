@@ -3,6 +3,10 @@ import game_world
 import game_framework
 
 ground_y = 100
+sky_y = 500
+ground_xl = 30
+ground_xr = 770
+
 background_x, background_y = 800, 549
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -39,7 +43,12 @@ class Ball:
         self.x += self.dir_x * RUN_SPEED_PPS * game_framework.frame_time  # 중력
         if self.y < ground_y:
             self.dir_y = 1
-
+        if self.y > sky_y:
+            self.dir_y = -1
+        if self.x < ground_xl:
+            self.dir_x = 1
+        if self.x > ground_xr:
+            self.dir_x = -1
         pass
         # self.x += self.velocity * 100 * game_framework.frame_time
 

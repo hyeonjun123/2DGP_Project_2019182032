@@ -2,6 +2,7 @@
 from pico2d import *
 from pico2d import get_time, load_image, SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_LEFT, SDLK_RIGHT
 
+import ball
 import game_framework
 import game_world
 
@@ -225,6 +226,11 @@ class Pikachu:
 
     def get_bb(self):
         return self.x -60, self.y -60, self.x+60, self.y+60
+
+    def fire_ball(self):
+        pass
+
+
 
     # def handle_collision(self,group, other):
     #     if group == 'pikachu:ball':

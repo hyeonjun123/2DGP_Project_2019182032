@@ -4,9 +4,12 @@ import game_framework
 import ball
 import cloud
 import game_world
+import wave2
 from background import background2
 import background
 from pikachu import Pikachu
+import title_mode
+import logo_mode
 
 # boy = None
 
@@ -40,6 +43,10 @@ def init():
         cloud_instance = cloud.Cloud()
         game_world.add_object(cloud_instance, 1)
 
+    #wave추가
+    for i in range(400):
+        wave = wave2.Wave()
+        game_world.add_object(wave, 1)
 
     #ball추가
     ball = ball.Ball()

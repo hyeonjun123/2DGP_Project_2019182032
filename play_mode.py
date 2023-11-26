@@ -44,7 +44,7 @@ def init():
         game_world.add_object(cloud_instance, 1)
 
     #wave추가
-    for i in range(400):
+    for i in range(500):
         wave = wave2.Wave()
         game_world.add_object(wave, 1)
 
@@ -63,6 +63,9 @@ def update():
     if game_world.collide(pikachu,ball):
         ball.dir_x = -1
         ball.dir_y = 1
+
+    # if pikachu.y >130:
+    #     pikachu.y -=0.5
 
 
 def draw():

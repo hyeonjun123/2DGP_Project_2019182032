@@ -12,11 +12,18 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-
-
 TIME_PER_ACTION = 0.5
-ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION #걷는 것
 FRAMES_PER_ACTION = 5
+
+
+SJ_TIME_PER_ACTION = 1
+SJ_ACTION_PER_TIME = 1.0 / SJ_TIME_PER_ACTION #걷는 것
+SJ_FRAMES_PER_ACTION = 4
+
+
+
+
 
 ground_y = 130
 jump_y = 250
@@ -143,6 +150,44 @@ class Jump:
         elif pikachu.face_dir == -1:
             pikachu.image.clip_composite_draw(int(pikachu.frame) *66,  65*3, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150, 150)
 
+class Side_Jump:
+    @staticmethod
+    def enter(pikachu, e):
+        if space_down(e):
+            if pikachu.y < jump_y:  # jump높이까지 y높이를 높인다.
+                pikachu.dir_y = 1
+
+    @staticmethod
+    def exit(pikachu, e):
+        if space_down(e):
+            pikachu.fire_ball()
+        pass
+
+    @staticmethod
+    def do(pikachu):
+        pikachu.frame = (pikachu.frame + 1) % 4
+
+        if pikachu.y >= jump_y:
+            pikachu.dir_y = -1 #pikachu.dir_y를 -1로 해준다.
+
+
+        pikachu.y += pikachu.dir_y * RUN_SPEED_PPS * game_framework.frame_time
+        pikachu.x += pikachu.dir * RUN_SPEED_PPS * game_framework.frame_time
+        pikachu.frame = (pikachu.frame + SJ_FRAMES_PER_ACTION * SJ_ACTION_PER_TIME * game_framework.frame_time) % SJ_FRAMES_PER_ACTION
+
+
+        if pikachu.y <= ground_y:
+            pikachu.state_machine.handle_event(('TIME_OUT', 0))
+        pass
+
+    @staticmethod
+    def draw(pikachu):
+        if pikachu.face_dir == 1:
+            pikachu.image.clip_draw(int(pikachu.frame) *66 ,  65*1, 68, 65, pikachu.x, pikachu.y, 150, 150)
+
+        elif pikachu.face_dir == -1:
+            pikachu.image.clip_composite_draw(int(pikachu.frame) *66,  65*1, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150, 150)
+
 
 class Sleep:
 
@@ -175,9 +220,10 @@ class StateMachine:
         self.cur_state = Idle
         self.transitions = {
             Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep, space_down: Idle, up_down : Jump},
-            Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run, up_down : Jump},
-            Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, up_down:Jump},
-            Jump: {time_out:Idle}
+            Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run, up_down : Jump, space_down : Side_Jump},
+            #Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, up_down:Jump},
+            Jump: {time_out:Idle},
+            Side_Jump: {time_out: Idle}
         }
 
     def start(self):

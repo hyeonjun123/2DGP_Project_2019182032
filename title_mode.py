@@ -10,6 +10,8 @@ def init():
     global image
     image = load_image('title.png') #title png 업로드
 
+
+
 def finish():
     global image
     del image

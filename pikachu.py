@@ -13,12 +13,14 @@ RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 TIME_PER_ACTION = 0.5
-ACTION_PER_TIME = 1.0 / TIME_PER_ACTION #걷는 것
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 5
 
 
+#사이드 점프
+SJ_RUN_SPEED_PPS = RUN_SPEED_PPS *2
 SJ_TIME_PER_ACTION = 1
-SJ_ACTION_PER_TIME = 1.0 / SJ_TIME_PER_ACTION #걷는 것
+SJ_ACTION_PER_TIME = 1.0 / SJ_TIME_PER_ACTION
 SJ_FRAMES_PER_ACTION = 4
 
 
@@ -51,10 +53,6 @@ class Idle:
 
     @staticmethod
     def enter(pikachu, e):
-        if pikachu.face_dir == -1:
-            pikachu.action = 2
-        elif pikachu.face_dir == 1:
-            pikachu.action = 3
         pikachu.dir = 0
         pikachu.frame = 0
         pikachu.wait_time = get_time()  # pico2d import 필요
@@ -86,9 +84,9 @@ class Run:
     @staticmethod
     def enter(pikachu, e):
         if right_down(e) or left_up(e):  # 오른쪽으로 RUN
-            pikachu.dir, pikachu.action, pikachu.face_dir = 1, 1, 1
+            pikachu.dir,  pikachu.face_dir = 1, 1
         elif left_down(e) or right_up(e):  # 왼쪽으로 RUN
-            pikachu.dir, pikachu.action, pikachu.face_dir = -1, 0, -1
+            pikachu.dir, pikachu.face_dir = -1, -1
 
     @staticmethod
     def exit(pikachu, e):
@@ -115,8 +113,11 @@ class Run:
         # pikachu.image.clip_draw(pikachu.frame * 68, pikachu.action * 65, 68, 65, pikachu.x, pikachu.y)
 
 
+
+
 class Jump:
     @staticmethod
+
     def enter(pikachu, e):
         if up_down(e):
             if pikachu.y < jump_y:  # jump높이까지 y높이를 높인다.
@@ -140,7 +141,7 @@ class Jump:
 
         if pikachu.y <= ground_y:
             pikachu.state_machine.handle_event(('TIME_OUT', 0))
-        pass
+
 
     @staticmethod
     def draw(pikachu):
@@ -165,14 +166,12 @@ class Side_Jump:
 
     @staticmethod
     def do(pikachu):
-        pikachu.frame = (pikachu.frame + 1) % 4
-
         if pikachu.y >= jump_y:
             pikachu.dir_y = -1 #pikachu.dir_y를 -1로 해준다.
 
 
-        pikachu.y += pikachu.dir_y * RUN_SPEED_PPS * game_framework.frame_time
-        pikachu.x += pikachu.dir * RUN_SPEED_PPS * game_framework.frame_time
+        pikachu.y += pikachu.dir_y * SJ_RUN_SPEED_PPS * game_framework.frame_time
+        pikachu.x += pikachu.dir * SJ_RUN_SPEED_PPS * game_framework.frame_time
         pikachu.frame = (pikachu.frame + SJ_FRAMES_PER_ACTION * SJ_ACTION_PER_TIME * game_framework.frame_time) % SJ_FRAMES_PER_ACTION
 
 
@@ -219,10 +218,10 @@ class StateMachine:
         self.boy = boy
         self.cur_state = Idle
         self.transitions = {
-            Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep, space_down: Idle, up_down : Jump},
+            Idle: {right_down: Run, left_down: Run, right_up: Idle, left_up: Idle, time_out: Sleep, space_down: Idle, up_down : Jump},
             Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run, up_down : Jump, space_down : Side_Jump},
             #Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, up_down:Jump},
-            Jump: {time_out:Idle},
+            Jump: {time_out:Idle, right_down:Jump, left_down: Jump, space_down: Jump, up_up:Jump},
             Side_Jump: {time_out: Idle}
         }
 

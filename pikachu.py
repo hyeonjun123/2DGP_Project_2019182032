@@ -23,6 +23,11 @@ SJ_TIME_PER_ACTION = 2
 SJ_ACTION_PER_TIME = 1.0 / SJ_TIME_PER_ACTION
 SJ_FRAMES_PER_ACTION = 4
 
+#일반 점프
+J_RUN_SPEED_PPS = RUN_SPEED_PPS*1.3
+J_TIME_PER_ACTION = 1.1
+J_ACTION_PER_TIME = 1.0 / J_TIME_PER_ACTION
+J_FRAMES_PER_ACTION = 5
 
 
 
@@ -132,13 +137,14 @@ class Jump:
 
     @staticmethod
     def do(pikachu):
-        pikachu.frame = (pikachu.frame + 1) % 5
+        #pikachu.frame = (pikachu.frame + 1) % 5
+        pikachu.frame = (pikachu.frame + J_FRAMES_PER_ACTION * J_ACTION_PER_TIME * game_framework.frame_time) % J_FRAMES_PER_ACTION
 
         if pikachu.y >= jump_y:
             pikachu.dir_y = -1 #pikachu.dir_y를 -1로 해준다.
 
 
-        pikachu.y += pikachu.dir_y * RUN_SPEED_PPS * game_framework.frame_time
+        pikachu.y += pikachu.dir_y * J_RUN_SPEED_PPS * game_framework.frame_time
 
         if pikachu.y <= ground_y:
             pikachu.state_machine.handle_event(('TIME_OUT', 0))
@@ -147,10 +153,10 @@ class Jump:
     @staticmethod
     def draw(pikachu):
         if pikachu.face_dir == 1:
-            pikachu.image.clip_draw(int(pikachu.frame) *66 ,  65*3, 68, 65, pikachu.x, pikachu.y, 150, 150)
-
+            #pikachu.image.clip_draw(int(pikachu.frame) *66 ,  65*3, 68, 65, pikachu.x, pikachu.y, 150, 150)
+            pikachu.jump_image.clip_draw(int(pikachu.frame) *66, 0, 68,65,pikachu.x, pikachu.y, 150, 150)
         elif pikachu.face_dir == -1:
-            pikachu.image.clip_composite_draw(int(pikachu.frame) *66,  65*3, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150, 150)
+            pikachu.jump_image.clip_composite_draw(int(pikachu.frame) *66, 0, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150, 150)
 
 class Side_Jump:
     @staticmethod
@@ -255,6 +261,7 @@ class Pikachu:
         self.dir = 0
         self.dir_y = 1
         self.image = load_image('animation_sheet.png')
+        self.jump_image = load_image('jump_animation_sheet.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start()
         self.item = None

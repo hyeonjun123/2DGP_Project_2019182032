@@ -27,7 +27,7 @@ class Wave:
         self.y += self.velocity * 100 * game_framework.frame_time
         if self.y > 15:
             self.velocity = -0.3
-        if self. y <-100:
+        if self. y <-50:
             self.velocity = 0.3
 
 

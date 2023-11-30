@@ -1,0 +1,16 @@
+# 메인 파일 이름을 지정하세요.
+main_file = 'main.py'
+
+# 데이타 파일들을 지정하세요.
+data_files = [
+    'animation_sheet.png', 'animation_sheet4.png', 'background.png', 'ball.png','cloud.png',
+    'hand_arrow.png','jump_animation_sheet.png', 'sprite_sheet.png','title.png','volleyball_net_11.png', 'wave.png','wave2.png',
+    'tuk_credit.png'
+
+]
+
+# 데이타가 들어있는 폴더들을 지정하세요.
+data_folders = [
+    # fill here
+]
+

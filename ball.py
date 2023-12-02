@@ -7,6 +7,12 @@ sky_y = 500
 ground_xl = 30
 ground_xr = 770
 
+net_xl = 350
+net_xr = 460
+net_yu = 250
+net_yd = 50
+
+
 background_x, background_y = 800, 549
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -23,7 +29,7 @@ FRAMES_PER_ACTION = 5
 class Ball:
     image = None
 
-    def __init__(self, x=700, y=300, velocity=2):
+    def __init__(self, x=700, y=300, velocity=4):
 
         if Ball.image == None:
             Ball.image = load_image('ball.png')
@@ -39,8 +45,9 @@ class Ball:
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
-        self.y += self.dir_y * RUN_SPEED_PPS * game_framework.frame_time*self.velocity  # 중력
-        self.x += self.dir_x * RUN_SPEED_PPS * game_framework.frame_time*self.velocity  # 중력
+        self.y += self.dir_y * RUN_SPEED_PPS * game_framework.frame_time*self.velocity
+        self.x += self.dir_x * RUN_SPEED_PPS * game_framework.frame_time*self.velocity
+
         if self.y < ground_y:
             self.dir_y = 1
         if self.y > sky_y:
@@ -49,6 +56,9 @@ class Ball:
             self.dir_x = 1
         if self.x > ground_xr:
             self.dir_x = -1
+
+
+
         pass
         # self.x += self.velocity * 100 * game_framework.frame_time
 

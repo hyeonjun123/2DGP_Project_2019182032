@@ -195,29 +195,41 @@ class Side_Jump:
             pikachu.image.clip_composite_draw(int(pikachu.frame) *66,  65*1, 68, 65, 0, 'h', pikachu.x, pikachu.y, 150, 150)
 
 
-class Sleep:
-
+class attack:
     @staticmethod
     def enter(pikachu, e):
-        pikachu.frame = 0
-        pass
+        if space_down(e):
+            if pikachu.y < jump_y:  # jump높이까지 y높이를 높인다.
+                pikachu.dir_y = 1
 
     @staticmethod
     def exit(pikachu, e):
+        if space_down(e):
+            pikachu.fire_ball()
         pass
 
     @staticmethod
     def do(pikachu):
-        pikachu.frame = (pikachu.frame + 1) % 8
+        if pikachu.y >= jump_y:
+            pikachu.dir_y = -1  # pikachu.dir_y를 -1로 해준다.
+
+        pikachu.y += pikachu.dir_y * SJ_RUN_SPEED_PPS * game_framework.frame_time
+        pikachu.x += pikachu.dir * SJ_RUN_SPEED_PPS * game_framework.frame_time
+        pikachu.frame = (
+                                    pikachu.frame + SJ_FRAMES_PER_ACTION * SJ_ACTION_PER_TIME * game_framework.frame_time) % SJ_FRAMES_PER_ACTION
+
+        if pikachu.y <= ground_y:
+            pikachu.state_machine.handle_event(('TIME_OUT', 0))
+        pass
 
     @staticmethod
     def draw(pikachu):
-        if pikachu.face_dir == -1:
-            pikachu.image.clip_composite_draw(pikachu.frame * 100, 200, 100, 100,
-                                              -3.141592 / 2, '', pikachu.x + 25, pikachu.y - 25, 100, 100)
-        else:
-            pikachu.image.clip_composite_draw(pikachu.frame * 100, 300, 100, 100,
-                                              3.141592 / 2, '', pikachu.x - 25, pikachu.y - 25, 100, 100)
+        if pikachu.face_dir == 1:
+            pikachu.image.clip_draw(int(pikachu.frame) * 66, 65 * 1, 68, 65, pikachu.x, pikachu.y, 150, 150)
+
+        elif pikachu.face_dir == -1:
+            pikachu.image.clip_composite_draw(int(pikachu.frame) * 66, 65 * 1, 68, 65, 0, 'h', pikachu.x, pikachu.y,
+                                              150, 150)
 
 
 class StateMachine:
@@ -225,9 +237,9 @@ class StateMachine:
         self.boy = boy
         self.cur_state = Idle
         self.transitions = {
-            Idle: {right_down: Run, left_down: Run, right_up: Idle, left_up: Idle, time_out: Sleep, space_down: Idle, up_down : Jump},
+            Idle: {right_down: Run, left_down: Run, right_up: Idle, left_up: Idle, space_down: Idle, up_down : Jump},
             Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run, up_down : Jump, space_down : Side_Jump},
-            #Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, up_down:Jump},
+            attack: {time_out: Idle},
             Jump: {time_out:Idle, right_down:Jump, left_down: Jump, space_down: Jump, up_up:Jump},
             Side_Jump: {time_out: Idle}
         }

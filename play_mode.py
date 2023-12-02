@@ -10,6 +10,8 @@ import background
 from pikachu import Pikachu
 import title_mode
 import logo_mode
+from score import Score
+
 
 # boy = None
 
@@ -37,6 +39,8 @@ def init():
     pikachu = Pikachu()
     game_world.add_object(pikachu, 1)
 
+    score = Score()
+    game_world.add_object(score,1)
 
     #cloud추가
     for i in range(10):
@@ -63,6 +67,9 @@ def update():
     if game_world.collide(pikachu,ball):
         ball.dir_x = -1
         ball.dir_y = 1
+
+    # if game_world.collide(ball, background):
+    #     ball.dir_x = -1 * ball.dir_x
 
     # if pikachu.y >130:
     #     pikachu.y -=0.5

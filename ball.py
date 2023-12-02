@@ -56,9 +56,6 @@ class Ball:
             self.dir_x = 1
         if self.x > ground_xr:
             self.dir_x = -1
-
-
-
         pass
         # self.x += self.velocity * 100 * game_framework.frame_time
 

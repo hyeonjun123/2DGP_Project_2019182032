@@ -39,9 +39,6 @@ def init():
     pikachu = Pikachu()
     game_world.add_object(pikachu, 1)
 
-    score = Score()
-    game_world.add_object(score,1)
-
     #cloud추가
     for i in range(10):
         cloud_instance = cloud.Cloud()
@@ -55,6 +52,9 @@ def init():
     #ball추가
     ball = ball.Ball()
     game_world.add_object(ball, 1)
+
+    score = Score(ball)
+    game_world.add_object(score,1)
 
 
 def finish():

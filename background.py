@@ -12,7 +12,7 @@ class background2:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return 390, 50, 410, 250
+        return 399, 50, 399, 250
     ####################
 
 

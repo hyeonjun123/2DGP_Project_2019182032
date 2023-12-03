@@ -211,6 +211,7 @@ class attack:
     def do(pikachu):
         if pikachu.y >= jump_y:
             pikachu.dir_y = -1  # pikachu.dir_y를 -1로 해준다.
+
         pikachu.y += pikachu.dir_y * SJ_RUN_SPEED_PPS * game_framework.frame_time
         pikachu.x += pikachu.dir * SJ_RUN_SPEED_PPS * game_framework.frame_time
         pikachu.frame = (

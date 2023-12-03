@@ -7,7 +7,10 @@ import game_world
 import wave2
 from background import background2
 import background
+
 from pikachu import Pikachu
+from pikachu_left import Pikachu_left
+
 import title_mode
 import logo_mode
 from score import Score
@@ -24,12 +27,14 @@ def handle_events():
             game_framework.quit()
         else:
             pikachu.handle_event(event)
+            pikachu_left.handle_event(event)
 
 def init():
     global background2
     global cloud
     global ball
     global pikachu
+    global pikachu_left
 
     running = True
 
@@ -38,6 +43,9 @@ def init():
 
     pikachu = Pikachu()
     game_world.add_object(pikachu, 1)
+
+    pikachu_left = Pikachu_left()
+    game_world.add_object(pikachu_left,2)
 
     #cloud추가
     for i in range(10):
@@ -57,6 +65,8 @@ def init():
     game_world.add_object(score,1)
 
 
+
+
 def finish():
     game_world.clear()
     pass
@@ -65,8 +75,12 @@ def finish():
 def update():
     game_world.update()
     if game_world.collide(pikachu,ball):
-        ball.dir_x = -1
-        ball.dir_y = 1
+        ball.dir_x = -1.5
+        ball.dir_y = 1.5
+
+    if game_world.collide(pikachu_left,ball):
+        ball.dir_x = 1.5
+        ball.dir_y = 1.5
 
     if game_world.collide(ball, background2):#공과 네트
         ball.dir_x = -1 * ball.dir_x

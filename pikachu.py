@@ -201,7 +201,6 @@ class attack:
         if space_down(e):
             if pikachu.y < jump_y:  # jump높이까지 y높이를 높인다.
                 pikachu.dir_y = 1
-
     @staticmethod
     def exit(pikachu, e):
         if space_down(e):
@@ -212,7 +211,6 @@ class attack:
     def do(pikachu):
         if pikachu.y >= jump_y:
             pikachu.dir_y = -1  # pikachu.dir_y를 -1로 해준다.
-
         pikachu.y += pikachu.dir_y * SJ_RUN_SPEED_PPS * game_framework.frame_time
         pikachu.x += pikachu.dir * SJ_RUN_SPEED_PPS * game_framework.frame_time
         pikachu.frame = (

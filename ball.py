@@ -8,7 +8,7 @@ ground_xl = 30
 ground_xr = 770
 
 net_xl = 350
-net_xr = 460
+net_xr = 450
 net_yu = 250
 net_yd = 50
 
@@ -39,7 +39,6 @@ class Ball:
         self.dir_x = 0
 
     def draw(self):
-
         draw_rectangle(*self.get_bb())
         self.image.clip_draw(int(self.frame) * 71, 0, 70, 70, self.x, self.y, 100, 100)  # ball_size 71 70
 
@@ -56,6 +55,7 @@ class Ball:
             self.dir_x = 1
         if self.x > ground_xr:
             self.dir_x = -1
+
         pass
         # self.x += self.velocity * 100 * game_framework.frame_time
 

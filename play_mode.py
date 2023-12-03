@@ -68,8 +68,8 @@ def update():
         ball.dir_x = -1
         ball.dir_y = 1
 
-    # if game_world.collide(ball, background):
-    #     ball.dir_x = -1 * ball.dir_x
+    if game_world.collide(ball, background2):#공과 네트
+        ball.dir_x = -1 * ball.dir_x
 
     # if pikachu.y >130:
     #     pikachu.y -=0.5

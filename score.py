@@ -28,7 +28,9 @@ class Score:
             self.score += 1
         if self.ball_instance.y < ball.ground_y and self.ball_instance.x > 400:
             self.score_left +=1
-        pass
+
+        if self.score and self.score_left > 7:
+            game_framework.quit()
 
 
 

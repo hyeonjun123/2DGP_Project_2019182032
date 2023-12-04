@@ -4,6 +4,7 @@ import game_framework
 import ball
 import cloud
 import game_world
+import score
 import wave2
 from background import background2
 import background
@@ -84,6 +85,7 @@ def update():
 
     if game_world.collide(ball, background2):#공과 네트
         ball.dir_x = -1 * ball.dir_x
+
 
     # if pikachu.y >130:
     #     pikachu.y -=0.5

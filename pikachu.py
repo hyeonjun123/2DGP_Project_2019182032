@@ -268,7 +268,7 @@ class Pikachu:
         self.x, self.y = 700, 130
         self.frame = 0
         self.action = 3
-        self.face_dir = 1
+        self.face_dir = -1
         self.dir = 0
         self.dir_y = 1
         self.image = load_image('animation_sheet.png')
@@ -286,10 +286,10 @@ class Pikachu:
     def draw(self):
 
         self.state_machine.draw()
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.x -60, self.y -60, self.x+60, self.y+60
+        return self.x -40, self.y -60, self.x+40, self.y+60
 
     def fire_ball(self):
         pass

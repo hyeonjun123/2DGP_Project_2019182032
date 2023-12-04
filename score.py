@@ -30,8 +30,8 @@ class Score:
         if self.ball_instance.y < ball.ground_y and self.ball_instance.x > 400:
             self.score_left +=1
 
-        if self.score or self.score_left > 7:
-            game_framework.change_mode(logo_mode)
+        if self.score > 7 or self.score_left > 7:
+            game_framework.change_mode(title_mode)
 
 
 

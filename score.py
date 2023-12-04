@@ -27,8 +27,16 @@ class Score:
     def update(self):
         if self.ball_instance.y < ball.ground_y and self.ball_instance.x < 400:
             self.score += 1
+            self.ball_instance.x =700
+            self.ball_instance.y =700
+            self.ball_instance.dir_y = -1
+            self.ball_instance.dir_x = 0
         if self.ball_instance.y < ball.ground_y and self.ball_instance.x > 400:
             self.score_left +=1
+            self.ball_instance.x =150
+            self.ball_instance.y =700
+            self.ball_instance.dir_y = -1
+            self.ball_instance.dir_x = 0
 
         if self.score > 7 or self.score_left > 7:
             game_framework.change_mode(title_mode)

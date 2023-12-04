@@ -29,7 +29,7 @@ FRAMES_PER_ACTION = 5
 class Ball:
     image = None
 
-    def __init__(self, x=700, y=300, velocity=4):
+    def __init__(self, x=700, y=700, velocity=4):
 
         if Ball.image == None:
             Ball.image = load_image('ball.png')
@@ -39,7 +39,7 @@ class Ball:
         self.dir_x = 0
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         self.image.clip_draw(int(self.frame) * 71, 0, 70, 70, self.x, self.y, 100, 100)  # ball_size 71 70
 
     def update(self):
@@ -48,13 +48,18 @@ class Ball:
         self.x += self.dir_x * RUN_SPEED_PPS * game_framework.frame_time*self.velocity
 
         if self.y < ground_y:
-            self.dir_y = 1
+            self.dir_y = 1.3
+            self.velocity = 3
         if self.y > sky_y:
-            self.dir_y = -1
+            self.dir_y = -1.5
+            self.dir_x = self.dir_x *1.4
+            self.velocity = 3
         if self.x < ground_xl:
-            self.dir_x = 1
+            self.dir_x = 1.3
+            self.velocity = 4
         if self.x > ground_xr:
-            self.dir_x = -1
+            self.dir_x = -1.2
+            self.velocity = 4
 
         pass
         # self.x += self.velocity * 100 * game_framework.frame_time

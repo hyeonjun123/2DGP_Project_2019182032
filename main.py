@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import title_mode as start_mode
+import logo_mode as start_mode
 
 background_x, background_y = 800,549
 

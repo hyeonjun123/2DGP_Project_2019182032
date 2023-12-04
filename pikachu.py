@@ -286,10 +286,10 @@ class Pikachu:
     def draw(self):
 
         self.state_machine.draw()
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.x -50, self.y -30, self.x+30, self.y+60
+        return self.x -50, self.y+40 , self.x+25, self.y+60
 
     def fire_ball(self):
         pass

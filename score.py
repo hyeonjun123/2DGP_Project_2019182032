@@ -4,7 +4,8 @@ import game_framework
 import game_world
 import random
 import ball
-
+import title_mode
+import logo_mode
 background_x, background_y = 800,549
 
 class Score:
@@ -29,8 +30,8 @@ class Score:
         if self.ball_instance.y < ball.ground_y and self.ball_instance.x > 400:
             self.score_left +=1
 
-        if self.score and self.score_left > 7:
-            game_framework.quit()
+        if self.score or self.score_left > 7:
+            game_framework.change_mode(logo_mode)
 
 
 

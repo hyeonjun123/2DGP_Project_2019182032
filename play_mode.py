@@ -1,12 +1,12 @@
 from pico2d import *
 import game_framework
 
-import ball
+from ball import Ball
 import cloud
 import game_world
 import score
 import wave2
-from background import background2
+from background import Background2
 import background
 
 from pikachu import Pikachu
@@ -33,13 +33,13 @@ def handle_events():
 def init():
     global background2
     global cloud
-    global ball
     global pikachu
     global pikachu_left
+    global ball
 
     running = True
 
-    background2 = background2()
+    background2 = Background2()
     game_world.add_object(background2, 0)
 
     pikachu = Pikachu()
@@ -59,7 +59,7 @@ def init():
         game_world.add_object(wave, 1)
 
     #ball추가
-    ball = ball.Ball()
+    ball = Ball()
     game_world.add_object(ball, 1)
 
     score = Score(ball)

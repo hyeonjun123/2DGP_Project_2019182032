@@ -2,7 +2,7 @@ from pico2d import *
 import game_world
 import game_framework
 
-class background2:
+class Background2:
     def __init__(self):
         self.image = load_image('background.png')
 
